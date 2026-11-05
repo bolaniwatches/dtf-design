@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - AMIN DTF DESIGNS</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-white: #ffffff;
+      --bg-light: #fdfdfd;
+      --text-black: #111111;
+      --text-gray: #666666;
+      --yellow-bright: #facc15;
+      --yellow-light: #fef08a;
+      --border-yellow: #eab308;
+      --shadow-yellow: rgba(250, 204, 21, 0.35);
+      --sidebar-width: 250px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--text-black);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR STYLING */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-white);
+      border-right: 2px solid var(--yellow-bright);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.03);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-black);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .brand-title span {
+      color: var(--border-yellow);
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-black);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background-color: var(--yellow-light);
+      border-color: var(--border-yellow);
+      box-shadow: 0 2px 8px var(--shadow-yellow);
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 30px;
+    }
+
+    .content-section {
+      display: none;
+      background: var(--bg-white);
+      border: 1.5px solid var(--yellow-bright);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+      max-width: 900px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--yellow-bright);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* FORM STYLING */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-black);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--border-yellow);
+      box-shadow: 0 0 6px var(--shadow-yellow);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* IMAGE COMPRESSION & PREVIEW BOX */
+    .upload-box {
+      border: 2px dashed var(--border-yellow);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background: #fffbeb;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .upload-box:hover {
+      background: var(--yellow-light);
+    }
+
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .preview-card {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-yellow);
+      background: #fff;
+    }
+
+    .preview-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-card .remove-img-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(220, 38, 38, 0.9);
+      color: #fff;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .file-size-badge {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      right: 2px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 2px 0;
+      border-radius: 4px;
+    }
+
+    .btn-submit {
+      padding: 12px 24px;
+      background-color: var(--text-black);
+      color: var(--yellow-bright);
+      border: 1.5px solid var(--yellow-bright);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--yellow-bright);
+      color: var(--text-black);
+      box-shadow: 0 4px 12px var(--shadow-yellow);
+    }
+
+    /* EDIT PRODUCTS GRID */
+    .edit-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .edit-card {
+      border: 1px solid var(--border-yellow);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .edit-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .edit-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .btn-action {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-edit { background: var(--yellow-bright); color: var(--text-black); }
+    .btn-delete { background: #ef4444; color: #fff; }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        position: relative;
+        border-right: none;
+        border-bottom: 2px solid var(--yellow-bright);
+      }
+      .main-content { margin-left: 0; padding: 16px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand-title">
+      <i class="fa-solid fa-gauge-high"></i> AMIN <span>DTF ADMIN</span>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="menu-item active" onclick="switchTab('addProductTab', this)">
+        <i class="fa-solid fa-plus"></i> Add Product
+      </div>
+      <div class="menu-item" onclick="switchTab('editProductTab', this)">
+        <i class="fa-solid fa-pen-to-square"></i> Edit Product
+      </div>
+      <div class="menu-item" onclick="switchTab('createCategoryTab', this)">
+        <i class="fa-solid fa-folder-plus"></i> Create Category
+      </div>
+      <div class="menu-item" onclick="switchTab('createFilterTab', this)">
+        <i class="fa-solid fa-filter"></i> Create Filters
+      </div>
+      <div class="menu-item" onclick="switchTab('manageCategoriesFiltersTab', this)">
+        <i class="fa-solid fa-sliders"></i> Edit Filters & Cats
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="main-content">
+
+    <!-- MODULE 1: ADD PRODUCT -->
+    <section class="content-section active" id="addProductTab">
+      <h2 class="section-title"><i class="fa-solid fa-cart-plus"></i> Add New Product</h2>
+      
+      <form id="addProductForm" onsubmit="handleProductUpload(event)">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="prodName" class="form-control" placeholder="e.g. Cyber Skull Vector" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="prodDesc" class="form-control" rows="3" placeholder="Enter product details..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (PKR)</label>
+            <input type="number" id="prodPrice" class="form-control" placeholder="1500" required>
+          </div>
+          <div class="form-group">
+            <label>Select Page</label>
+            <select id="prodPage" class="form-control">
+              <option value="dtf-design">DTF Design.html</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Select Category</label>
+            <select id="prodCategory" class="form-control">
+              <option value="text-based">Text-Based</option>
+              <option value="visual-based">Visual-Based</option>
+              <option value="3d-effects">3D & Effects</option>
+              <option value="mixed-media">Mixed Media</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Select Filter</label>
+            <select id="prodFilter" class="form-control">
+              <option value="popular">Popular</option>
+              <option value="latest">Latest</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Main Image Upload with Client-side Compression -->
+        <div class="form-group">
+          <label>Upload Main Image (Auto Compressed to ~80-100KB)</label>
+          <div class="upload-box" onclick="document.getElementById('mainImgInput').click()">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--border-yellow);"></i>
+            <p style="margin-top: 8px; font-weight: 600;">Click to upload Main Image</p>
+            <input type="file" id="mainImgInput" accept="image/*" style="display: none;" onchange="processImageCompress(this, 'main')">
+          </div>
+          <div class="preview-container" id="mainImgPreview"></div>
+        </div>
+
+        <!-- Multiple Images Upload -->
+        <div class="form-group">
+          <label>More Images (Multiple Selection)</label>
+          <div class="upload-box" onclick="document.getElementById('moreImgInput').click()">
+            <i class="fa-solid fa-images" style="font-size: 2rem; color: var(--border-yellow);"></i>
+            <p style="margin-top: 8px; font-weight: 600;">Click to upload Additional Images</p>
+            <input type="file" id="moreImgInput" accept="image/*" multiple style="display: none;" onchange="processImageCompress(this, 'more')">
+          </div>
+          <div class="preview-container" id="moreImgPreview"></div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-upload"></i> Upload Product
+        </button>
+      </form>
+    </section>
+
+    <!-- MODULE 2: EDIT PRODUCT -->
+    <section class="content-section" id="editProductTab">
+      <h2 class="section-title"><i class="fa-solid fa-list-check"></i> Edit / Manage Products</h2>
+      
+      <div class="edit-products-grid" id="editProductsContainer">
+        <!-- Rendered dynamically -->
+        <p style="color: var(--text-gray);">Loading uploaded products...</p>
+      </div>
+    </section>
+
+    <!-- MODULE 3: CREATE CATEGORY -->
+    <section class="content-section" id="createCategoryTab">
+      <h2 class="section-title"><i class="fa-solid fa-folder-plus"></i> Create New Category</h2>
+      
+      <form id="createCategoryForm" onsubmit="handleCategoryCreate(event)">
+        <div class="form-group">
+          <label>Select Page</label>
+          <select class="form-control">
+            <option value="dtf-design">DTF Design.html</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Category Name</label>
+          <input type="text" id="newCatName" class="form-control" placeholder="e.g. Cyberpunk Vectors" required>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-plus"></i> Add Category
+        </button>
+      </form>
+    </section>
+
+    <!-- MODULE 4: CREATE FILTERS -->
+    <section class="content-section" id="createFilterTab">
+      <h2 class="section-title"><i class="fa-solid fa-filter"></i> Create New Filter</h2>
+      
+      <form id="createFilterForm" onsubmit="handleFilterCreate(event)">
+        <div class="form-group">
+          <label>Select Page</label>
+          <select class="form-control" id="filterPageSelect">
+            <option value="dtf-design">DTF Design.html</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Select Category</label>
+          <select class="form-control" id="filterCatSelect">
+            <option value="text-based">Text-Based</option>
+            <option value="visual-based">Visual-Based</option>
+            <option value="3d-effects">3D & Effects</option>
+            <option value="mixed-media">Mixed Media</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Filter Name</label>
+          <input type="text" id="newFilterName" class="form-control" placeholder="e.g. Trending 2026" required>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-check"></i> Add Filter
+        </button>
+      </form>
+    </section>
+
+    <!-- MODULE 5: MANAGE CATEGORIES & FILTERS -->
+    <section class="content-section" id="manageCategoriesFiltersTab">
+      <h2 class="section-title"><i class="fa-solid fa-sliders"></i> Manage Categories & Filters</h2>
+      
+      <div style="margin-top: 10px;">
+        <h3>Custom Categories</h3>
+        <div id="manageCategoriesContainer" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <!-- Dynamic Categories List -->
+        </div>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <h3>Custom Filters</h3>
+        <div id="manageFiltersContainer" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <!-- Dynamic Filters List -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let processedMainImage = null;
+    let processedMoreImages = [];
+
+    // Switch Sidebar Modules
+    function switchTab(tabId, menuItem) {
+      document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      menuItem.classList.add('active');
+
+      if (tabId === 'editProductTab') {
+        loadProductsForEdit();
+      } else if (tabId === 'manageCategoriesFiltersTab') {
+        loadCategoriesAndFiltersForManagement();
+      }
+    }
+
+    // Client-Side Canvas Image Compression
+    function processImageCompress(input, type) {
+      const files = Array.from(input.files);
+      if (!files.length) return;
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width = img.width;
+            let height = img.height;
+            const maxDimension = 800;
+
+            if (width > height && width > maxDimension) {
+              height *= maxDimension / width;
+              width = maxDimension;
+            } else if (height > maxDimension) {
+              width *= maxDimension / height;
+              height = maxDimension;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            const sizeInKB = Math.round((compressedBase64.length * (3/4)) / 1024);
+
+            if (type === 'main') {
+              processedMainImage = compressedBase64;
+              renderMainPreview(compressedBase64, sizeInKB);
+            } else {
+              processedMoreImages.push(compressedBase64);
+              renderMorePreviews();
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderMainPreview(base64, size) {
+      const container = document.getElementById('mainImgPreview');
+      container.innerHTML = `
+        <div class="preview-card">
+          <button class="remove-img-btn" onclick="removeMainImg()"><i class="fa-solid fa-xmark"></i></button>
+          <img src="${base64}">
+          <div class="file-size-badge">${size} KB</div>
+        </div>
+      `;
+    }
+
+    function removeMainImg() {
+      processedMainImage = null;
+      document.getElementById('mainImgPreview').innerHTML = '';
+      document.getElementById('mainImgInput').value = '';
+    }
+
+    function renderMorePreviews() {
+      const container = document.getElementById('moreImgPreview');
+      container.innerHTML = '';
+      processedMoreImages.forEach((imgBase64, idx) => {
+        const size = Math.round((imgBase64.length * (3/4)) / 1024);
+        const card = document.createElement('div');
+        card.className = 'preview-card';
+        card.innerHTML = `
+          <button class="remove-img-btn" onclick="removeMoreImg(${idx})"><i class="fa-solid fa-xmark"></i></button>
+          <img src="${imgBase64}">
+          <div class="file-size-badge">${size} KB</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function removeMoreImg(index) {
+      processedMoreImages.splice(index, 1);
+      renderMorePreviews();
+    }
+
+    // Submit Product Handler
+    async function handleProductUpload(e) {
+      e.preventDefault();
+      if (!processedMainImage) {
+        alert("Please select a main image!");
+        return;
+      }
+
+      const payload = {
+        name: document.getElementById('prodName').value,
+        description: document.getElementById('prodDesc').value,
+        price: document.getElementById('prodPrice').value,
+        page: document.getElementById('prodPage').value,
+        category: document.getElementById('prodCategory').value,
+        filter: document.getElementById('prodFilter').value,
+        mainImage: processedMainImage,
+        moreImages: processedMoreImages
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/products/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          alert('Product Uploaded Successfully!');
+          document.getElementById('addProductForm').reset();
+          removeMainImg();
+          processedMoreImages = [];
+          renderMorePreviews();
+        } else {
+          alert('Server connection pending.');
+        }
+      } catch (err) {
+        alert('Server error.');
+      }
+    }
+
+    // Load Products for Edit Section
+    async function loadProductsForEdit() {
+      const container = document.getElementById('editProductsContainer');
+      try {
+        const res = await fetch('http://localhost:5000/api/products');
+        if (res.ok) {
+          const products = await res.json();
+          container.innerHTML = '';
+          if(products.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-gray);">No products found.</p>';
+            return;
+          }
+          products.forEach(p => {
+            container.innerHTML += `
+              <div class="edit-card">
+                <img src="${p.mainImage}" alt="${p.name}">
+                <div style="font-weight:700; font-size:0.85rem;">${p.name}</div>
+                <div style="color:#d97706; font-weight:800; font-size:0.8rem;">PKR ${p.price}</div>
+                <div class="edit-actions">
+                  <button class="btn-action btn-delete" onclick="deleteProduct('${p._id}')">Delete</button>
+                </div>
+              </div>
+            `;
+          });
+        }
+      } catch (err) {
+        container.innerHTML = '<p style="color: var(--text-gray);">Connect backend server to load database products.</p>';
+      }
+    }
+
+    // Delete Product from Database
+    async function deleteProduct(id) {
+      if (!confirm("Are you sure you want to delete this product?")) return;
+      try {
+        const res = await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          alert('Product deleted successfully!');
+          loadProductsForEdit();
+        } else {
+          alert('Error deleting product.');
+        }
+      } catch (err) {
+        alert('Server error.');
+      }
+    }
+
+    // Handle Category Create with Database
+    async function handleCategoryCreate(e) {
+      e.preventDefault();
+      const catName = document.getElementById('newCatName').value.trim();
+      if (!catName) return;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/categories/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: catName, page: 'dtf-design' })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Category "${catName}" created & saved to database successfully!`);
+          document.getElementById('createCategoryForm').reset();
+          loadDynamicDropdowns();
+        } else {
+          alert(data.message || 'Error creating category');
+        }
+      } catch (err) {
+        alert('Server error. Make sure backend is running.');
+      }
+    }
+
+    // Handle Filter Create with Database
+    async function handleFilterCreate(e) {
+      e.preventDefault();
+      const filterName = document.getElementById('newFilterName').value.trim();
+      const category = document.getElementById('filterCatSelect').value;
+      if (!filterName) return;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/filters/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name: filterName, 
+            category: category, 
+            page: 'dtf-design' 
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Filter "${filterName}" saved to database successfully!`);
+          document.getElementById('createFilterForm').reset();
+          loadDynamicDropdowns();
+        } else {
+          alert(data.message || 'Error creating filter');
+        }
+      } catch (err) {
+        alert('Server error. Make sure backend is running.');
+      }
+    }
+
+    // Load Categories & Filters for Management Tab
+    async function loadCategoriesAndFiltersForManagement() {
+      const catContainer = document.getElementById('manageCategoriesContainer');
+      const filterContainer = document.getElementById('manageFiltersContainer');
+      
+      catContainer.innerHTML = 'Loading categories...';
+      filterContainer.innerHTML = 'Loading filters...';
+
+      // 1. Fetch & Render Categories
+      try {
+        const catRes = await fetch('http://localhost:5000/api/categories');
+        if (catRes.ok) {
+          const cats = await catRes.json();
+          catContainer.innerHTML = '';
+          if (cats.length === 0) {
+            catContainer.innerHTML = '<p style="color:var(--text-gray);">No custom categories found.</p>';
+          }
+          cats.forEach(cat => {
+            catContainer.innerHTML += `
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 10px 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <div><strong>${cat.name}</strong> <span style="font-size:0.8rem; color:#6b7280;">(Slug: ${cat.slug})</span></div>
+                <button onclick="deleteCategory('${cat._id}')" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight:600;"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            `;
+          });
+        }
+      } catch (err) {
+        catContainer.innerHTML = 'Error loading categories.';
+      }
+
+      // 2. Fetch & Render Filters
+      try {
+        const filterRes = await fetch('http://localhost:5000/api/filters');
+        if (filterRes.ok) {
+          const filters = await filterRes.json();
+          filterContainer.innerHTML = '';
+          if (filters.length === 0) {
+            filterContainer.innerHTML = '<p style="color:var(--text-gray);">No custom filters found.</p>';
+          }
+          filters.forEach(filter => {
+            filterContainer.innerHTML += `
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 10px 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <div><strong>${filter.name}</strong> <span style="font-size:0.8rem; color:#6b7280;">(Category: ${filter.category})</span></div>
+                <button onclick="deleteFilter('${filter._id}')" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight:600;"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            `;
+          });
+        }
+      } catch (err) {
+        filterContainer.innerHTML = 'Error loading filters.';
+      }
+    }
+
+    // Delete Category from Database
+    async function deleteCategory(id) {
+      if (!confirm("Are you sure you want to delete this category from database?")) return;
+      try {
+        const res = await fetch(`http://localhost:5000/api/categories/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          alert('Category deleted successfully!');
+          loadCategoriesAndFiltersForManagement();
+          loadDynamicDropdowns();
+        } else {
+          alert('Error deleting category.');
+        }
+      } catch (err) {
+        alert('Server error.');
+      }
+    }
+
+    // Delete Filter from Database
+    async function deleteFilter(id) {
+      if (!confirm("Are you sure you want to delete this filter from database?")) return;
+      try {
+        const res = await fetch(`http://localhost:5000/api/filters/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          alert('Filter deleted successfully!');
+          loadCategoriesAndFiltersForManagement();
+          loadDynamicDropdowns();
+        } else {
+          alert('Error deleting filter.');
+        }
+      } catch (err) {
+        alert('Server error.');
+      }
+    }
+
+    // Auto-populate Category & Filter dropdowns from Database API
+    async function loadDynamicDropdowns() {
+      const categorySelects = document.querySelectorAll('#prodCategory, #filterCatSelect');
+      const defaultCats = [
+        { name: 'Text-Based', slug: 'text-based' },
+        { name: 'Visual-Based', slug: 'visual-based' },
+        { name: '3D & Effects', slug: '3d-effects' },
+        { name: 'Mixed Media', slug: 'mixed-media' }
+      ];
+
+      try {
+        const catRes = await fetch('http://localhost:5000/api/categories');
+        const dbCats = catRes.ok ? await catRes.json() : [];
+        const allCategories = [...defaultCats, ...dbCats];
+
+        categorySelects.forEach(select => {
+          const currentVal = select.value;
+          select.innerHTML = '';
+          allCategories.forEach(cat => {
+            select.innerHTML += `<option value="${cat.slug}">${cat.name}</option>`;
+          });
+          select.value = currentVal;
+        });
+      } catch (e) {
+        console.log('Could not load categories from server');
+      }
+
+      const filterSelect = document.getElementById('prodFilter');
+      if (filterSelect) {
+        const defaultFilters = [
+          { name: 'Popular' },
+          { name: 'Latest' }
+        ];
+
+        try {
+          const filterRes = await fetch('http://localhost:5000/api/filters');
+          const dbFilters = filterRes.ok ? await filterRes.json() : [];
+          const allFilters = [...defaultFilters, ...dbFilters];
+
+          const currentFilterVal = filterSelect.value;
+          filterSelect.innerHTML = '';
+          allFilters.forEach(f => {
+            filterSelect.innerHTML += `<option value="${f.name}">${f.name}</option>`;
+          });
+          filterSelect.value = currentFilterVal;
+        } catch (e) {
+          console.log('Could not load filters from server');
+        }
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDynamicDropdowns();
+    });
+  </script>
+</body>
+</html>
