@@ -695,7 +695,7 @@
     // Load Dynamic Products from Database API
     async function loadDynamicProducts() {
       try {
-        const response = await fetch('http://localhost:5000/api/products?page=dtf-design');
+        const response = await fetch('https://dtf-backend-sai4.vercel.app/api/products?page=dtf-design');
         if (response.ok) {
           const products = await response.json();
           const dynamicContainer = document.getElementById('dynamicProductsSection');
@@ -726,7 +726,7 @@
     // Load Categories from MongoDB Database API dynamically (Without Duplication)
     async function loadDynamicCategories() {
       try {
-        const res = await fetch('http://localhost:5000/api/categories');
+        const res = await fetch('https://dtf-backend-sai4.vercel.app/api/categories');
         if (res.ok) {
           const dbCats = await res.json();
           const categoryContainer = document.getElementById('categoryContainer');
@@ -754,7 +754,7 @@
     // Load Filters from MongoDB Database API dynamically
     async function loadDynamicFilters() {
       try {
-        const res = await fetch('http://localhost:5000/api/filters');
+        const res = await fetch('https://dtf-backend-sai4.vercel.app/api/filters');
         if (res.ok) {
           const dbFilters = await res.json();
           console.log("Loaded filters from DB:", dbFilters);
