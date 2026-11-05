@@ -456,7 +456,7 @@
         renderProductDetails(currentProduct);
       } else {
         try {
-          const res = await fetch(`http://localhost:5000/api/product/${productId}`);
+          const res = await fetch(`https://dtf-backend-sai4.vercel.app/api/product/${productId}`);
           if (res.ok) {
             currentProduct = await res.json();
             renderProductDetails({
