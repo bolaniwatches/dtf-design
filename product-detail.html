@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - AMIN DTF DESIGNS</title>
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-white: #ffffff;
+      --text-black: #111111;
+      --text-gray: #666666;
+      --yellow-bright: #facc15;
+      --yellow-light: #fef08a;
+      --border-yellow: #eab308;
+      --shadow-yellow: rgba(250, 204, 21, 0.4);
+      --nav-height: 56px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-white);
+      color: var(--text-black);
+      padding-top: var(--nav-height);
+      padding-bottom: 70px; /* Space for fixed mobile bottom button */
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--nav-height);
+      background-color: var(--bg-white);
+      border-bottom: 2px solid var(--yellow-bright);
+      box-shadow: 0 2px 10px var(--shadow-yellow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-black);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--border-yellow);
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: var(--bg-white);
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-black);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background-color: var(--yellow-light);
+      box-shadow: 0 2px 8px var(--shadow-yellow);
+    }
+
+    /* PRODUCT DETAIL CONTAINER */
+    .detail-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    /* LEFT SIDE: IMAGES GALLERY */
+    .gallery-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .main-image-box {
+      width: 100%;
+      height: 450px;
+      border: 2px solid var(--yellow-bright);
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .main-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumbnails-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .thumb-box {
+      width: 80px;
+      height: 80px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .thumb-box.active, .thumb-box:hover {
+      border-color: var(--border-yellow);
+      box-shadow: 0 0 8px var(--shadow-yellow);
+    }
+
+    .thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* RIGHT SIDE: DETAILS */
+    .info-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .prod-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-black);
+    }
+
+    .prod-price {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #d97706;
+    }
+
+    .prod-desc {
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      line-height: 1.6;
+    }
+
+    /* Trigger Order Button (Initial) */
+    .initial-order-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--text-black);
+      color: var(--yellow-bright);
+      border: 2px solid var(--yellow-bright);
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .initial-order-btn:hover {
+      background-color: var(--yellow-bright);
+      color: var(--text-black);
+      box-shadow: 0 4px 12px var(--shadow-yellow);
+    }
+
+    /* POPUP ORDER FORM (Hidden by default) */
+    .order-card {
+      display: none; /* Hidden initially */
+      margin-top: 10px;
+      background: #fffbeb;
+      border: 1.5px solid var(--yellow-bright);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .order-card.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .order-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .order-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-black);
+    }
+
+    .close-form-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--text-gray);
+    }
+
+    .close-form-btn:hover {
+      color: var(--text-black);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-black);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+      background: #fff;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-yellow);
+      box-shadow: 0 0 6px var(--shadow-yellow);
+    }
+
+    .whatsapp-order-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .whatsapp-order-btn:hover {
+      background-color: #22bf5b;
+      transform: translateY(-2px);
+    }
+
+    /* MOBILE FIXED BOTTOM BAR */
+    .mobile-bottom-bar {
+      display: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .detail-container {
+        grid-template-columns: 1fr;
+        margin: 20px auto;
+        padding-bottom: 30px;
+      }
+      .main-image-box {
+        height: 350px;
+      }
+      /* Fixed bottom button on mobile */
+      .mobile-bottom-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        padding: 12px 16px;
+        border-top: 1.5px solid var(--yellow-bright);
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+        z-index: 999;
+      }
+      .mobile-order-trigger {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--yellow-bright);
+        color: var(--text-black);
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 8px var(--shadow-yellow);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR WITH BACK BUTTON -->
+  <nav class="navbar">
+    <a href="dtf-design.html" class="nav-logo">
+      <i class="fa-solid fa-shirt"></i>
+      AMIN <span>DTF DESIGN</span>
+    </a>
+    
+    <!-- Smart Back Button with Scroll/State Preservation -->
+    <a href="dtf-design.html" class="back-btn" onclick="goBackToScroll(event)">
+      <i class="fa-solid fa-arrow-left"></i> Back
+    </a>
+  </nav>
+
+  <!-- DETAIL MAIN SECTION -->
+  <div class="detail-container">
+    
+    <!-- LEFT: Images Gallery -->
+    <div class="gallery-section">
+      <div class="main-image-box">
+        <img id="mainDisplayImg" src="https://via.placeholder.com/600x600?text=Select+Product" alt="Product Image">
+      </div>
+      <div class="thumbnails-row" id="thumbnailsRow">
+        <!-- Thumbnails populated via JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT: Product Info & Popup Order Form -->
+    <div class="info-section">
+      <h1 class="prod-title" id="prodTitle">Loading Product...</h1>
+      <div class="prod-price" id="prodPrice">PKR 0</div>
+      <p class="prod-desc" id="prodDesc">High quality Direct-to-Film (DTF) custom streetwear graphic optimized for vibrant colors and long-lasting durability.</p>
+
+      <!-- Desktop Order Now Trigger Button -->
+      <button class="initial-order-btn" onclick="toggleOrderForm()">
+        <i class="fa-solid fa-bag-shopping"></i> Order Now
+      </button>
+
+      <!-- Popup Order Form Container (Hidden initially) -->
+      <div class="order-card" id="orderFormCard">
+        <div class="order-card-header">
+          <h3><i class="fa-brands fa-whatsapp" style="color: #25D366; font-size: 1.3rem;"></i> Order via WhatsApp</h3>
+          <button class="close-form-btn" onclick="toggleOrderForm()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="whatsappOrderForm" onsubmit="sendWhatsAppOrder(event)">
+          <div class="form-group">
+            <label for="custName">Your Name</label>
+            <input type="text" id="custName" class="form-input" placeholder="e.g. Ali Khan" required>
+          </div>
+          <div class="form-group">
+            <label for="custPhone">Phone Number</label>
+            <input type="tel" id="custPhone" class="form-input" placeholder="03XXXXXXXXX" required>
+          </div>
+          <div class="form-group">
+            <label for="custAddress">Delivery Address</label>
+            <textarea id="custAddress" class="form-input" rows="2" placeholder="House #, Street, City" required></textarea>
+          </div>
+          <button type="submit" class="whatsapp-order-btn">
+            <i class="fa-brands fa-whatsapp"></i> Send Order on WhatsApp
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MOBILE FIXED BOTTOM BAR -->
+  <div class="mobile-bottom-bar">
+    <button class="mobile-order-trigger" onclick="toggleOrderForm()">
+      <i class="fa-solid fa-bag-shopping"></i> Order Now
+    </button>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Sample product database mapping for permanent items or dynamic ID fetch
+    const permanentProducts = {
+      'tb1': { name: 'Urban Minimal Typography', price: 'PKR 1,200', desc: 'Clean minimalist typography designed for oversized heavyweight streetwear tees.', images: ['images/cards/tb1-main.jpg', 'images/cards/tb1-hover.jpg'] },
+      'tb2': { name: 'Retro Grunge Motto', price: 'PKR 1,350', desc: 'Distressed vintage lettering with weathered texture for vintage aesthetic apparel.', images: ['images/cards/tb2-main.jpg', 'images/cards/tb2-hover.jpg'] },
+      'tb3': { name: 'Neon Cyberpunk Text', price: 'PKR 1,500', desc: 'Futuristic sci-fi neon slogan built for dark wash streetwear hoodies.', images: ['images/cards/tb3-main.jpg', 'images/cards/tb3-hover.jpg'] },
+      'tb4': { name: 'Gothic Calligraphy DTF', price: 'PKR 1,100', desc: 'Classic Old English gothic lettering for modern alt-fashion drops.', images: ['images/cards/tb4-main.jpg', 'images/cards/tb4-hover.jpg'] },
+      'vb1': { name: 'Cyber Samurai Graphic', price: 'PKR 1,800', desc: 'High-detail anime cyberpunk illustration optimized for dark fabric DTF printing.', images: ['images/cards/vb1-main.jpg', 'images/cards/vb1-hover.jpg'] },
+      'vb2': { name: 'Biker Skull DTF Art', price: 'PKR 1,650', desc: 'Aggressive motorcycle club skull mascot with flames and wings.', images: ['images/cards/vb2-main.jpg', 'images/cards/vb2-hover.jpg'] },
+      'vb3': { name: 'Cosmic Explorer DTF', price: 'PKR 1,750', desc: 'Astronaut drifting through psychedelic space nebula.', images: ['images/cards/vb3-main.jpg', 'images/cards/vb3-hover.jpg'] },
+      'vb4': { name: 'Eastern Dragon Vector', price: 'PKR 1,900', desc: 'Intricate traditional Japanese dragon wrapping around streetwear chest layouts.', images: ['images/cards/vb4-main.jpg', 'images/cards/vb4-hover.jpg'] },
+      'thd1': { name: '3D Chrome Illusion', price: 'PKR 2,100', desc: 'Shiny reflective chrome 3D lettering for futuristic streetwear.', images: ['images/cards/thd1-main.jpg', 'images/cards/thd1-hover.jpg'] },
+      'thd2': { name: 'Liquid Hologram Vector', price: 'PKR 2,250', desc: 'Prismatic color shifting liquid effect graphic.', images: ['images/cards/thd2-main.jpg', 'images/cards/thd2-hover.jpg'] },
+      'thd3': { name: 'Isometric Geometric Cube', price: 'PKR 1,950', desc: 'Sharp optical illusion 3D cube for minimalist styling.', images: ['images/cards/thd3-main.jpg', 'images/cards/thd3-hover.jpg'] },
+      'thd4': { name: '3D Metallic Skull', price: 'PKR 2,400', desc: 'Embossed metallic skeleton head with realistic depth.', images: ['images/cards/thd4-main.jpg', 'images/cards/thd4-hover.jpg'] },
+      'mm1': { name: 'Abstract Collage DTF', price: 'PKR 1,600', desc: 'Mixed media zine culture collage with torn paper overlays.', images: ['images/cards/mm1-main.jpg', 'images/cards/mm1-hover.jpg'] },
+      'mm2': { name: 'Photo Vector Mashup', price: 'PKR 1,700', desc: 'Blend of realism and vector illustration elements.', images: ['images/cards/mm2-main.jpg', 'images/cards/mm2-hover.jpg'] },
+      'mm3': { name: 'Graffiti Newspaper Hybrid', price: 'PKR 1,850', desc: 'Urban aerosol graffiti over vintage print media background.', images: ['images/cards/mm3-main.jpg', 'images/cards/mm3-hover.jpg'] },
+      'mm4': { name: 'Watercolor Typography Print', price: 'PKR 1,500', desc: 'Soft watercolor paint splash integrated with bold lettering.', images: ['images/cards/mm4-main.jpg', 'images/cards/mm4-hover.jpg'] }
+    };
+
+    let currentProduct = null;
+
+    // Load Product Data on page startup
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+
+      if (permanentProducts[productId]) {
+        currentProduct = permanentProducts[productId];
+        renderProductDetails(currentProduct);
+      } else {
+        try {
+          const res = await fetch(`http://localhost:5000/api/product/${productId}`);
+          if (res.ok) {
+            currentProduct = await res.json();
+            renderProductDetails({
+              name: currentProduct.name,
+              price: `PKR ${currentProduct.price}`,
+              desc: currentProduct.description,
+              images: [currentProduct.mainImage, ...(currentProduct.moreImages || [])]
+            });
+          } else {
+            document.getElementById('prodTitle').innerText = 'Product Not Found';
+          }
+        } catch (e) {
+          document.getElementById('prodTitle').innerText = 'Product Not Found';
+        }
+      }
+    });
+
+    function renderProductDetails(prod) {
+      document.getElementById('prodTitle').innerText = prod.name;
+      document.getElementById('prodPrice').innerText = prod.price;
+      document.getElementById('prodDesc').innerText = prod.desc;
+
+      const mainImg = document.getElementById('mainDisplayImg');
+      const thumbRow = document.getElementById('thumbnailsRow');
+
+      if (prod.images && prod.images.length > 0) {
+        mainImg.src = prod.images[0];
+        mainImg.onerror = () => { mainImg.src = 'https://via.placeholder.com/600x600?text=DTF+Design'; };
+
+        thumbRow.innerHTML = '';
+        prod.images.forEach((imgUrl, index) => {
+          const thumb = document.createElement('div');
+          thumb.className = `thumb-box ${index === 0 ? 'active' : ''}`;
+          thumb.innerHTML = `<img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150x150?text=Thumb'">`;
+          thumb.onclick = () => {
+            mainImg.src = imgUrl;
+            document.querySelectorAll('.thumb-box').forEach(b => b.classList.remove('active'));
+            thumb.classList.add('active');
+          };
+          thumbRow.appendChild(thumb);
+        });
+      }
+    }
+
+    // Toggle Order Form Popup & Smooth Scroll into view
+    function toggleOrderForm() {
+      const formCard = document.getElementById('orderFormCard');
+      formCard.classList.toggle('active');
+      if (formCard.classList.contains('active')) {
+        formCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // Smart Back Button
+    function goBackToScroll(e) {
+      e.preventDefault();
+      if (document.referrer && document.referrer.includes('dtf-design.html')) {
+        window.history.back();
+      } else {
+        window.location.href = 'dtf-design.html';
+      }
+    }
+
+    // Send WhatsApp Order with Form Details & Image
+    function sendWhatsAppOrder(e) {
+      e.preventDefault();
+      const name = document.getElementById('custName').value;
+      const phone = document.getElementById('custPhone').value;
+      const address = document.getElementById('custAddress').value;
+
+      const prodName = currentProduct ? currentProduct.name : 'Custom DTF Design';
+      const prodPrice = currentProduct ? currentProduct.price : 'N/A';
+      const activeImg = document.getElementById('mainDisplayImg').src;
+
+      const whatsappNumber = "923000000000"; // Apna WhatsApp number yahan set karein
+      
+      const message = `*NEW DTF ORDER - AMIN DTF DESIGNS*%0A` +
+                      `-----------------------------------%0A` +
+                      `*Product:* ${prodName}%0A` +
+                      `*Price:* ${prodPrice}%0A` +
+                      `*Image Link:* ${activeImg}%0A%0A` +
+                      `*Customer Details:*%0A` +
+                      `*Name:* ${name}%0A` +
+                      `*Phone:* ${phone}%0A` +
+                      `*Address:* ${address}`;
+
+      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+    }
+  </script>
+</body>
+</html>
